@@ -4,7 +4,7 @@ import arc.graphics.Color
 import mindustry.type.Item
 
 public open class TsItems : ContentList{
-    val ts:Item ? = null
+    var ts:Item ? = null
     
     override fun load(){
         ts ?: newItem("ss")
