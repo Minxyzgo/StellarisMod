@@ -22,5 +22,6 @@ public class TestMod : Mod() {
 
     override fun loadContent() {
         Log.info("test")
+        TsItems().load()
     }
 }
