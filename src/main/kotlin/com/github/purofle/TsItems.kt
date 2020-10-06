@@ -13,7 +13,6 @@ public open class TsItems : ContentList{
     
     class newItem constructor(name:String) : Item(name){
         init {
-            this.color = Color.red
             this.cost = 2.0f
         }
     }
