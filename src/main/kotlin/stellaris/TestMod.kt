@@ -1,4 +1,4 @@
-package com.github.purofle
+package stellaris
 
 import arc.Events
 import arc.util.Log
@@ -8,20 +8,14 @@ import mindustry.game.EventType
 import mindustry.game.EventType.WorldLoadEvent
 import mindustry.mod.Mod
 import mindustry.ui.dialogs.BaseDialog
-
+import stellaris.content.AsBlocks
 public class TestMod : Mod() {
     init {
-        Log.info("插件开始加载")
-
-        Events.on(WorldLoadEvent::class.java) {
-            Time.runTask(20f) {
-                Vars.ui.showErrorMessage("nmsl")
-            }
-        }
+        
     }
 
     override fun loadContent() {
-        Log.info("test")
-        TsItems().load()
+        AsBlocks().load()
+
     }
 }
