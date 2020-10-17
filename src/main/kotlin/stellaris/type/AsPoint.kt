@@ -14,7 +14,7 @@ public class AsPoint() : ContentList {
     
     
     
-    enum class PointStack(val point:Int = 0, var isModlue:Boolean = false) {
+    enum class PointStack(val point:Int = 0, val realname:String ? = null, private val isModlue:Boolean = false) {
         copper(1),
         lead(2),
         metaglass(4),
@@ -26,13 +26,13 @@ public class AsPoint() : ContentList {
         scrap(3),
         silicon(5),
         plastanium(16),
-        phasefabric(25),
-        surgealloy(41),
-        sporePod(4),
-        blastCompound(11),
+        phasefabric(25, "phase-fabric"),
+        surgealloy(41, "surge-alloy"),
+        sporePod(4, "spore-pod"),
+        blastCompound(11, "blast-compound"),
         pyratite(7);
         fun get() : Item? = if(isModlue) null else getItem()
-        fun getItem() : Item? = Vars.content.getByName(ContentType.item, "$name")
+        fun getItem() : Item? = Vars.content.getByName(ContentType.item, realname ?: name)
         fun getP() : Int = point
         
         companion object {
