@@ -1,2 +1,2 @@
-# TestKotlinMod
-A prototype Java Mindustry mod that works on Android and PC
+# StellarisMod
+一个使用 kotlin 编写的Mindustry Mod
