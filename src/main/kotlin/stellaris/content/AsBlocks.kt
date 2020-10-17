@@ -43,7 +43,7 @@ public class AsBlocks : ContentList {
                     val image = MultiReqImage()
                     content.items().each({ i: Item -> filter[i] && i.unlockedNow() }) { item: Item ->
                         image.add(ReqImage(ItemImage(item.icon(Cicon.medium)),
-                                Boolp { tile != null && !(tile.items.empty() && (tile as EnergyBuild).getItem() === item )}))
+                                Boolp { tile != null && !(tile.items.empty()) && (tile as EnergyBuild).getItem() === item }))
                     }
                     table.add(image).size(8f * 4f)
                 }
@@ -82,11 +82,7 @@ public class AsBlocks : ContentList {
                  write.i(itemId ?: -1)
              }
              
-             override fun consume() {
-                 for(cons:Consume in block.consumes.all()) {
-                     (cons as? ConsumeItems)?.trigger(this)
-                 }
-             }
+             
              
              override fun acceptItem(source:Building, item:Item) : Boolean {
                  if(super.acceptItem(source, item) && (((itemId?.toShort()) == item.id) || items.empty())) {
