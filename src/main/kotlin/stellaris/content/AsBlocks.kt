@@ -1,30 +1,59 @@
 package stellaris.content
-import mindustry.ctype.ContentList
-import mindustry.world.blocks.production.GenericSmelter
-import mindustry.ctype.ContentType
-import mindustry.gen.Building
-import mindustry.type.ItemStack
+
+import arc.func.Boolf
+import arc.func.Boolp
+import arc.func.Prov
+import arc.scene.ui.layout.Table
+import arc.struct.ObjectMap
 import arc.util.io.Reads
 import arc.util.io.Writes
 import mindustry.Vars
-import mindustry.world.consumers.ConsumeItems
-import mindustry.world.consumers.Consume
+import mindustry.Vars.content
 import mindustry.content.Items
+import mindustry.ctype.ContentList
+import mindustry.ctype.ContentType
+import mindustry.gen.Building
 import mindustry.type.Category
 import mindustry.type.Item
+import mindustry.type.ItemStack
+import mindustry.ui.Cicon
+import mindustry.ui.ItemImage
+import mindustry.ui.MultiReqImage
+import mindustry.ui.ReqImage
+import mindustry.world.blocks.production.GenericSmelter
+import mindustry.world.consumers.Consume
+import mindustry.world.consumers.ConsumeItemFilter
+import mindustry.world.consumers.ConsumeItems
 import stellaris.type.AsPoint
-import arc.func.Prov
+
 
 public class AsBlocks : ContentList {
     val MatterEnergyTransformator = object : GenericSmelter("matter-energy transformator") {
         init {
             outputItem = ItemStack(Items.lead, 1)
             requirements(Category.crafting, ItemStack.with())
-            var ilist = arrayListOf<ItemStack>()
+            itemCapacity = 1000
+            var ilist = ObjectMap<Item, ItemStack>()
             for (item in AsPoint.PointStack.values()) {
-                ilist.add(ItemStack(item.get(), 150 / item.getP()))
+                ilist.put(item.get(), ItemStack(item.get(), 150 / item.getP()))
             }
-            consumes.items(*ilist.toTypedArray())
+
+            consumes.add(object : ConsumeItemFilter(Boolf { i: Item -> ilist.containsKey(i) }) {
+                override fun build(tile: Building?, table: Table) {
+                    val image = MultiReqImage()
+                    content.items().each({ i: Item -> filter[i] && i.unlockedNow() }) { item: Item ->
+                        image.add(ReqImage(ItemImage(item.icon(Cicon.medium)),
+                                Boolp { tile != null && !(tile.items.empty() && (tile as EnergyBuild).getItem() === item )}))
+                    }
+                    table.add(image).size(8f * 4f)
+                }
+
+                override fun valid(entity: Building): Boolean {
+                    return !entity.items.empty()
+                }
+            })
+
+//            consumes.items(*ilist.toTypedArray())
             
             buildType = Prov {
                 EnergyBuild()
@@ -60,7 +89,7 @@ public class AsBlocks : ContentList {
              }
              
              override fun acceptItem(source:Building, item:Item) : Boolean {
-                 if(super.acceptItem(source, item) && ((itemId?.toShort()) == item.id)) {
+                 if(super.acceptItem(source, item) && (((itemId?.toShort()) == item.id) || items.empty())) {
                      itemId = item.id.toInt()
                      return true
                  } else {
