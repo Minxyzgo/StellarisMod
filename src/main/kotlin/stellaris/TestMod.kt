@@ -9,7 +9,7 @@ import mindustry.game.EventType.WorldLoadEvent
 import mindustry.mod.Mod
 import mindustry.ui.dialogs.BaseDialog
 import stellaris.content.AsBlocks
-public class TestMod : Mod() {
+public open class TestMod : Mod() {
     init {
         
     }
