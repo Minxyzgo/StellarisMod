@@ -19,13 +19,12 @@ public class AsBlocks : ContentList {
     val MatterEnergyTransformator = object : GenericSmelter("matter-energy transformator") {
         init {
             outputItem = ItemStack(Items.lead, 1)
-            
-            
+            requirements(Category.crafting, ItemStack.with())
+            var ilist = arrayListOf<ItemStack>()
             for (item in AsPoint.PointStack.values()) {
-                consumes.item(item.get(), 150 / item.getP())
-                requirements(Category.crafting, ItemStack.with())
-                
+                ilist.add(ItemStack(item.get(), 150 / item.getP()))
             }
+            consumes.items(*ilist.toTypedArray())
             
             buildType = Prov {
                 EnergyBuild()
@@ -37,7 +36,7 @@ public class AsBlocks : ContentList {
             
              override fun consValid():Boolean {
                  for (item in AsPoint.PointStack.values()) {
-                     return items.has(item.get())
+                     if(!items.has(item.get())) continue else return true
                  }
                  
                  return super.consValid()
@@ -61,7 +60,7 @@ public class AsBlocks : ContentList {
              }
              
              override fun acceptItem(source:Building, item:Item) : Boolean {
-                 if(super.acceptItem(source, item) && ((itemId?.toShort()) != item.id)) {
+                 if(super.acceptItem(source, item) && ((itemId?.toShort()) == item.id)) {
                      itemId = item.id.toInt()
                      return true
                  } else {
